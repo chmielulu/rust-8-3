@@ -1,6 +1,6 @@
-use std::io;
-use std::io::Write;
+use std::io::{Write, Read, stdin, stdout};
 use std::collections::HashMap;
+use std::process::Command;
 
 fn main() {
     let mut database = HashMap::new();
@@ -49,15 +49,23 @@ fn main() {
         } else {
             continue;
         }
+
+        clear_console();
     }
 }
 
 fn get_from_user(buf: &mut String) -> &str {
-    io::stdout().flush().unwrap();
+    stdout().flush().unwrap();
 
-    io::stdin()
+    stdin()
         .read_line(buf)
         .expect("Failed to read line!");
 
     buf.trim()
+}
+
+fn clear_console() {
+    let _ = Command::new("pwsh.exe").arg("/c").arg("pause").status();
+
+    print!("{esc}[2J{esc}[1;1H", esc = 27 as char);
 }
